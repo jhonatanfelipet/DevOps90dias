@@ -1,0 +1,11 @@
+---
+- name: Desplegar app con Nginx, usuario y firewall
+  hosts: web
+  become: yes
+  vars_files:
+    - ../inventories/dev/vars.yml
+  roles:
+    - nginx
+    - usuario
+    - firewall
+

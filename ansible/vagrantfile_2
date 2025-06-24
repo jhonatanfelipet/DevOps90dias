@@ -1,0 +1,42 @@
+Vagrant.configure("2") do |config|
+  config.vm.box = "bento/ubuntu-22.04"
+
+  # Nodo de control (ya existente)
+  config.vm.define "control" do |control|
+    control.vm.hostname = "control"
+    control.vm.network "private_network", ip: "192.168.33.20"
+
+    control.vm.provision "shell", inline: <<-SHELL
+      echo "¡Hola desde el provisionamiento!" > /tmp/hola.txt
+      apt update && apt install -y nginx ansible docker.io
+      systemctl start nginx
+    SHELL
+
+    control.vm.provision "shell", path: "scripts/instalar_nginx.sh"
+    control.vm.provision "shell", path: "scripts/instalar_docker.sh"
+  end
+
+  # Nodo web1 (192.168.31.10)
+  config.vm.define "web1" do |web1|
+    web1.vm.hostname = "web1"
+    web1.vm.network "private_network", ip: "192.168.31.10"
+    web1.vm.provision "shell", inline: <<-SHELL
+      useradd -m admin
+      echo 'admin:admin' | chpasswd
+      apt update && apt install -y nginx
+      systemctl enable --now nginx
+    SHELL
+  end
+
+  # Nodo web2 (192.168.31.11)
+  config.vm.define "web2" do |web2|
+    web2.vm.hostname = "web2"
+    web2.vm.network "private_network", ip: "192.168.31.11"
+    web2.vm.provision "shell", inline: <<-SHELL
+      useradd -m admin
+      echo 'admin:admin' | chpasswd
+      apt update && apt install -y nginx
+      systemctl enable --now nginx
+    SHELL
+  end
+end

@@ -1,0 +1,69 @@
+---
+- name: Instalar Nginx
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Asegurar que Nginx esté habilitado y corriendo
+  systemd:
+    name: nginx
+    enabled: yes
+    state: started
+
+- name: Crear contenido HTML profesional para la landing page
+  copy:
+    dest: /var/www/html/index.html
+    content: |
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Felipe Taborda — DevOps Engineer</title>
+        <style>
+          body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: #ecf0f1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+          }
+          .container {
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+          }
+          h1 {
+            font-size: 3em;
+            margin-bottom: 0.2em;
+            color: #00cec9;
+          }
+          p {
+            font-size: 1.2em;
+            color: #dfe6e9;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <h1>Felipe Taborda — DevOps Engineer</h1>
+          <p>🚀 Despliegue exitoso con Ansible + Vagrant</p>
+          <p>Automatización y profesionalismo en cada línea de código</p>
+        </div>
+      </body>
+      </html>
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
+- name: Reiniciar Nginx para aplicar cambios
+  systemd:
+    name: nginx
+    state: restarted
+

@@ -1,0 +1,78 @@
+---
+- name: Desplegar servidor Nginx con usuario y firewall
+  hosts: webservers
+  become: yes
+
+  vars:
+    ssh_user: deploy
+    ssh_password: "{{ 'MiP@ssw0rd123' | password_hash('sha512') }}"
+
+  tasks:
+    - name: Instalar Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+
+    - name: Copiar página HTML personalizada
+      copy:
+        content: |
+          <!DOCTYPE html>
+          <html lang="es">
+          <head>
+            <meta charset="UTF-8" />
+            <title>Bienvenido a mi servidor Nginx</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                background: #2c3e50;
+                color: #ecf0f1;
+                text-align: center;
+                padding: 3rem;
+              }
+              h1 {
+                color: #e74c3c;
+              }
+              p {
+                font-size: 1.2rem;
+              }
+            </style>
+          </head>
+          <body>
+            <h1>¡Hola desde tu servidor Nginx con Ansible!</h1>
+            <p>Esta es una página web desplegada automáticamente por Ansible.</p>
+          </body>
+          </html>
+        dest: /var/www/html/index.html
+        owner: www-data
+        group: www-data
+        mode: '0644'
+
+    - name: Crear usuario deploy con contraseña
+      user:
+        name: "{{ ssh_user }}"
+        password: "{{ ssh_password }}"
+        shell: /bin/bash
+        groups: sudo
+        append: yes
+        state: present
+
+    - name: Asegurar que usuario deploy tiene directorio home
+      file:
+        path: "/home/{{ ssh_user }}"
+        state: directory
+        owner: "{{ ssh_user }}"
+        group: "{{ ssh_user }}"
+        mode: '0755'
+
+    - name: Permitir puertos SSH, HTTP y HTTPS en firewall UFW
+      ufw:
+        rule: allow
+        port: "22,80,443"
+        proto: tcp
+
+    - name: Habilitar UFW firewall
+      ufw:
+        state: enabled
+        logging: on
+

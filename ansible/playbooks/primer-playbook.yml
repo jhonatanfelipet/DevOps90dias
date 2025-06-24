@@ -1,0 +1,28 @@
+- name: Configuración básica de servidor
+  hosts: webservers
+  become: yes
+
+  vars:
+    deploy_password: "admin"
+  
+  tasks:
+    - name: Instalar paquetes esenciales
+      apt:
+        name: ["git", "tree", "htop"]
+        state: present
+        update_cache: yes
+
+    - name: Crear usuario deploy
+      user:
+        name: deploy
+        groups: sudo
+        append: yes
+        password: "{{ deploy_password | password_hash('sha512') }}"
+        shell: /bin/bash
+        state: present
+
+    - name: Habilitar firewall y permitir puertos SSH, HTTP y HTTPS
+      ufw:
+        rule: allow
+        port: "22,80,443"
+        proto: tcp
