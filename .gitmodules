@@ -1,0 +1,3 @@
+[submodule "mi-primer-ci-cd"]
+	path = mi-primer-ci-cd
+	url = https://github.com/jhonatanfelipet/mi-primer-ci-cd.git
