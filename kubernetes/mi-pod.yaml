@@ -8,4 +8,4 @@ metadata:
 spec:
   containers:
   - name: mi-contenedor
-image: httpd:2.4
+    image: httpd:2.4
