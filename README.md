@@ -41,7 +41,7 @@ DevOps90dias/
 ├── proyecto-ansible/      # Estructura modular de Ansible basada en Roles
 │   ├── roles/             # Roles: firewall, nginx, usuario
 │   └── inventories/dev/   # Inventario y variables por entorno
-└── mi-primer-ci-cd/       # Submódulo: Pipeline de CI/CD con GitHub Actions
+└── (Ver también: mi-primer-ci-cd como repositorio independiente de automatización)
 ```
 
 ---
@@ -81,7 +81,7 @@ Directorios: [`ansible/`](./ansible/) y [`proyecto-ansible/`](./proyecto-ansible
   - Playbooks declarativos e idempotentes (`playbook.yml`).
 
 ### 5. Integración Continua (CI/CD)
-Submódulo: [`mi-primer-ci-cd/`](https://github.com/jhonatanfelipet/mi-primer-ci-cd)
+Repositorio independiente: [`mi-primer-ci-cd`](https://github.com/jhonatanfelipet/mi-primer-ci-cd)
 - Pipelines completos implementados en **GitHub Actions**:
   - Matriz de pruebas para múltiples versiones de Python.
   - Ejecución automatizada de pruebas unitarias con `pytest` y cálculo de cobertura de código (`pytest-cov`).
